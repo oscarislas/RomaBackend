@@ -56,10 +56,8 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -72,10 +70,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -123,10 +117,6 @@
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\BackendContext\" />
@@ -147,11 +137,16 @@
     <Compile Include="Migrations\201602240149496_Init.Designer.cs">
       <DependentUpon>201602240149496_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602262247394_AddIndexToClave.cs" />
+    <Compile Include="Migrations\201602262247394_AddIndexToClave.Designer.cs">
+      <DependentUpon>201602262247394_AddIndexToClave.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Articulo.cs" />
     <Compile Include="Models\ArticuloPedido.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Pedido.cs" />
+    <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +165,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201602240149496_Init.resx">
       <DependentUpon>201602240149496_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602262247394_AddIndexToClave.resx">
+      <DependentUpon>201602262247394_AddIndexToClave.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

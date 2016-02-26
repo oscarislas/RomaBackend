@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RomaBackend.Models
 {
 	public class Cliente
 	{
+		[Key]
 		public Guid ID { get; set; }
 		[StringLength(50)]
+		[Index("IX_Clave", 1, IsUnique = true)]
 		public string Clave { get; set; }
 		[StringLength(100)]
 		public string Nombre { get; set; }

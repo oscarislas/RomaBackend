@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
@@ -7,9 +8,9 @@ using RomaBackend.Models;
 
 namespace RomaBackend.Controllers
 {
-    public class DataBaseController : ApiController
-    {
-		[System.Web.Http.HttpGet]
+	public class DataBaseController : ApiController
+	{
+		[HttpGet]
 		public Cliente GetCliente(string id)
 		{
 			Cliente cliente;
@@ -20,22 +21,91 @@ namespace RomaBackend.Controllers
 			return cliente;
 		}
 
-		[System.Web.Http.HttpGet]
+		[HttpPost]
+		public Result CreateCliente([FromBody]Cliente cliente)
+		{
+			var result = new Result { IsError = false, Message = "Cliente creado" };
+			try
+			{
+				using (var context = new BackendContext())
+				{
+					if (context.Clientes.Any(c => c.Clave == cliente.Clave))
+					{
+						result.IsError = true;
+						result.Message = "Client already exists.";
+					}
+					else if(String.IsNullOrEmpty(cliente.Clave))
+					{
+						result.IsError = true;
+						result.Message = "La clave no puede ser nula";
+					}
+					else
+					{
+						cliente.ID = Guid.NewGuid();
+						context.Clientes.Add(cliente);
+						context.SaveChanges();
+					}
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				result.IsError = true;
+				result.Message = e.Message;
+				return result;
+			}
+		}
+
+		[HttpPost]
+		public Result UpdateCliente([FromBody]Cliente cliente)
+		{
+			var result = new Result { IsError = false, Message = "Cliente actualizado" };
+			try
+			{
+				using (var context = new BackendContext())
+				{
+					var clientToUpdate = context.Clientes.FirstOrDefault(c => c.Clave == cliente.Clave);
+					if (clientToUpdate == null)
+					{
+						result.IsError = true;
+						result.Message = "Cliente no encontrado";
+					}
+					else
+					{
+						cliente.ID = clientToUpdate.ID;
+						var entry = context.Entry(clientToUpdate);
+						entry.CurrentValues.SetValues(cliente);
+						context.SaveChanges();
+					}
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				result.IsError = true;
+				result.Message = e.Message;
+				return result;
+			}
+		}
+
+		[HttpGet]
 		public Pedido[] GetPedidosCliente(string id)
 		{
 			Cliente cliente;
-			Pedido[] pedidos; 
+			Pedido[] pedidos;
 			using (var context = new BackendContext())
 			{
 				context.Configuration.ProxyCreationEnabled = false;
 				cliente = context.Clientes.FirstOrDefault(c => c.Clave.ToLower().Equals(id.ToLower()));
-				pedidos = context.Pedidos.Where(p => p.ClienteID == cliente.ID).Include(p=> p.ArticulosPedidos).ToArray();
+				pedidos = context.Pedidos.Where(p => p.ClienteID == cliente.ID).Include(p => p.ArticulosPedidos).ToArray();
 			}
 			return pedidos;
 		}
 
-		[System.Web.Http.HttpGet]
-		public Pedido[] GetUltimoPedidoCliente(string id)
+		[HttpGet]
+		public Pedido GetUltimoPedidoCliente(string id)
 		{
 			Cliente cliente;
 			Pedido[] pedidos;
@@ -44,17 +114,23 @@ namespace RomaBackend.Controllers
 				context.Configuration.ProxyCreationEnabled = false;
 				cliente = context.Clientes.FirstOrDefault(c => c.Clave.ToLower().Equals(id.ToLower()));
 				pedidos = context.Pedidos.Where(p => p.ClienteID == cliente.ID)
-					.OrderByDescending(p=> p.FechaPedido)
+					.OrderByDescending(p => p.FechaPedido)
 					.Take(1)
 					.Include(p => p.ArticulosPedidos)
 					.ToArray();
 			}
-			return pedidos;
+			return pedidos.FirstOrDefault();
 		}
 
+		[HttpPost]
+		public Result CreatePedido(Pedido pedido)
+		{
+			var result = new Result {IsError = false, Message = "Pedido Creado"};
+			return result;
+		}
 
-	    [System.Web.Http.HttpGet]
-	    public List<Articulo> GetArticulos()
+		[HttpGet]
+		public List<Articulo> GetArticulos()
 		{
 			List<Articulo> articulos;
 			using (var context = new BackendContext())
