@@ -1,0 +1,79 @@
+##Nuevo Cliente
+{
+   "ID":"",
+   "Clave":"0000",
+   "Nombre":"Test0",
+   "Calle":"Calle Test 0",
+   "Colonia":"Col. 0",
+   "Ciudad":"Ciudad0",
+   "Correo":"0000@mail.com",
+   "Indicaciones":"Indicaciones",
+   "RFC":"RFC00000",
+   "NombreFactura":"0000 Factura",
+   "CalleFactura":"Calle Test 0 Factura",
+   "ColoniaFactura":"Col 0 Factura",
+   "CiudadFactura":"Ciudad0 Factura",
+   "CorreoFactura":"0000@factura.com"
+}
+
+##Actualizar Cliente
+{
+   "ID":"a9a50489-ca6c-400d-b184-dcd0e2dceb87",
+   "Clave":"1234",
+   "Nombre":"Test1234",
+   "Calle":"Calle Test 1234",
+   "Colonia":"Col. 0",
+   "Ciudad":"Ciudad0",
+   "Correo":"0000@mail.com",
+   "Indicaciones":"Indicaciones",
+   "RFC":"RFC00000",
+   "NombreFactura":"0000 Factura",
+   "CalleFactura":"Calle Test 0 Factura",
+   "ColoniaFactura":"Col 0 Factura",
+   "CiudadFactura":"Ciudad0 Factura",
+   "CorreoFactura":"0000@factura.com"
+}
+
+##Nuevo Pedido
+{
+  "ID": "",
+  "ClientID": "4283CBF8-BB0D-4BC3-840E-D002227D049B",
+  "Json": "{JSON2}",
+  "Articulos": [
+    {
+      "Indicaciones": "Indicacion",
+      "ID": "773AC44D-4633-4A13-93DB-7DAEE2955BF2",
+      "Cantidad": 9
+    },
+    {
+      "Indicaciones": "",
+      "ID": "04AF94A5-FE91-4D0F-BC40-F4DA9B908AC7",
+      "Cantidad": 9
+    },
+    {
+      "Indicaciones": "Algo",
+      "ID": "B1BF202D-DBD9-4CCC-B190-EFFB079E4572",
+      "Cantidad": 9
+    }
+  ]
+}
+
+##Actualizar Pedido
+{
+  "ID": "84981FE3-1020-4113-89FF-B28CBC77E799",
+  "ClientID": "4283CBF8-BB0D-4BC3-840E-D002227D049B",
+  "Status" : 2,
+  "Json": "{JSON2}",
+  "Articulos": [
+    {
+      "Indicaciones": "Indicacion",
+      "ID": "773AC44D-4633-4A13-93DB-7DAEE2955BF2",
+      "Cantidad": 1
+    },
+    {
+      "Indicaciones": "",
+      "ID": "04AF94A5-FE91-4D0F-BC40-F4DA9B908AC7",
+      "Cantidad": 1
+    }
+  ]
+}

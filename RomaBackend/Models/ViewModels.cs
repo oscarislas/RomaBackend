@@ -7,6 +7,7 @@ namespace RomaBackend.Models
 	{
 		public Guid? ID { get; set; }
 		public Guid ClientID { get; set; }
+		public Status? Status { get; set; }
 		public string Json { get; set; }
 		public List<ArticuloViewModel> Articulos { get; set; }
 	}

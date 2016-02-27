@@ -8,6 +8,7 @@ using RomaBackend.Models;
 
 namespace RomaBackend.Controllers
 {
+	//POCHO CODE HATE
 	public class DataBaseController : ApiController
 	{
 		[HttpGet]
@@ -147,31 +148,12 @@ namespace RomaBackend.Controllers
 					Status = Status.PorSurtir,
 					Json = pedidoViewModel.Json,
 				};
-				var articulosPedidos = pedidoViewModel.Articulos.Select(a =>
-					new ArticuloPedido
-					{
-						ArticuloID = a.ID,
-						Cantidad = a.Cantidad,
-						PedidoID = pedido.ID,
-						Indicaciones = a.Indicaciones,
-					})
-					.ToList();
-				pedido.ArticulosPedidos = articulosPedidos;
+
+				pedido.ArticulosPedidos = CreateArticulosPedidosFromViewModel(pedidoViewModel.Articulos, pedido.ID);
+
 				using (var context = new BackendContext())
 				{
-					var articulosIDs = articulosPedidos.Select(ap => ap.ArticuloID).ToList();
-                    var articulosToUpdate = context.Articulos.Where(a => articulosIDs.Contains(a.ID)).ToList();
-					foreach (var articulo in articulosToUpdate)
-					{
-						articulo.Existencia -= articulosPedidos.First(a => a.ArticuloID == articulo.ID).Cantidad;
-
-						if (ignorarExistencias || articulo.Existencia >= 0) continue;
-
-						result.IsError = true;
-						result.Message = $"No hay suficientes existencias de \"{articulo.Descripcion}\" para el pedido";
-						return result;
-					}
-
+					UpdateExistenciaArticulos(pedido.ArticulosPedidos, ignorarExistencias, true, context);
 					context.Pedidos.Add(pedido);
 					context.SaveChanges();
 				}
@@ -186,10 +168,44 @@ namespace RomaBackend.Controllers
 		}
 
 		[HttpPost]
-		public Result UpdatePedido(PedidoViewModel pedidoViewModel)
+		public Result UpdatePedido([FromBody]PedidoViewModel pedidoViewModel, [FromUri]bool ignorarExistencias = false)
 		{
 			var result = new Result { IsError = false, Message = "Pedido Actualizado" };
-			return result;
+			try
+			{
+				using (var context = new BackendContext())
+				{
+					var pedido = context.Pedidos.FirstOrDefault(p => p.ID == pedidoViewModel.ID);
+					if (pedido == null)
+					{
+						result.IsError = true;
+						result.Message = "Pedido no encontrado";
+						return result;
+					}
+
+					if (pedidoViewModel.Status.HasValue)
+					{
+						if (pedido.Status != Status.Entregado && pedidoViewModel.Status.Value == Status.Entregado)
+							pedido.FechaEntrega = DateTime.Now;
+						pedido.Status = pedidoViewModel.Status.Value;
+					}
+
+					UpdateExistenciaArticulos(pedido.ArticulosPedidos, ignorarExistencias, false, context);
+					pedido.ArticulosPedidos = CreateArticulosPedidosFromViewModel(pedidoViewModel.Articulos, pedido.ID);
+					UpdateExistenciaArticulos(pedido.ArticulosPedidos, ignorarExistencias, true, context);
+
+					var entry = context.Entry(pedido);
+					entry.State = EntityState.Modified;
+					context.SaveChanges();
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				result.IsError = true;
+				result.Message = e.Message;
+				return result;
+			}
 		}
 
 		[HttpGet]
@@ -203,5 +219,35 @@ namespace RomaBackend.Controllers
 			return articulos;
 		}
 
+		private static List<ArticuloPedido> CreateArticulosPedidosFromViewModel(List<ArticuloViewModel> articulos, Guid pedidoID)
+		{
+			var articulosPedidos = articulos.Select(a =>
+					new ArticuloPedido
+					{
+						ArticuloID = a.ID,
+						Cantidad = a.Cantidad,
+						PedidoID = pedidoID,
+						Indicaciones = a.Indicaciones,
+					})
+					.ToList();
+			return articulosPedidos;
+		}
+
+		private static void UpdateExistenciaArticulos(List<ArticuloPedido> articulosPedidos, bool ignorarExistencias, bool removeExistencias, BackendContext context)
+		{
+			var articulosIDs = articulosPedidos.Select(ap => ap.ArticuloID).ToList();
+			var articulosToUpdate = context.Articulos.Where(a => articulosIDs.Contains(a.ID)).ToList();
+			foreach (var articulo in articulosToUpdate)
+			{
+				if (removeExistencias)
+				{
+					articulo.Existencia -= articulosPedidos.First(a => a.ArticuloID == articulo.ID).Cantidad;
+					if (!ignorarExistencias && articulo.Existencia < 0)
+						throw new Exception($"No hay suficientes existencias de \"{articulo.Descripcion}\" para el pedido");
+				}
+				else
+					articulo.Existencia += articulosPedidos.First(a => a.ArticuloID == articulo.ID).Cantidad;
+			}
+		}
 	}
 }
