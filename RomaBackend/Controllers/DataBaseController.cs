@@ -129,6 +129,27 @@ namespace RomaBackend.Controllers
 			return result;
 		}
 
+		[HttpPost]
+		public Result UpdatePedido(Pedido pedido)
+		{
+			var result = new Result { IsError = false, Message = "Pedido Creado" };
+			return result;
+		}
+
+		[HttpPost]
+		public Result AddArticulos(Articulo[] articulos)
+		{
+			var result = new Result { IsError = false, Message = "Pedido Creado" };
+			return result;
+		}
+
+		[HttpPost]
+		public Result UpdateArticulos(Articulo[] articulos)
+		{
+			var result = new Result { IsError = false, Message = "Pedido Creado" };
+			return result;
+		}
+
 		[HttpGet]
 		public List<Articulo> GetArticulos()
 		{
