@@ -45,7 +45,7 @@ namespace RomaBackend.Controllers
 						result.IsError = true;
 						result.Message = "Client already exists.";
 					}
-					else if(String.IsNullOrEmpty(cliente.Clave))
+					else if (String.IsNullOrEmpty(cliente.Clave))
 					{
 						result.IsError = true;
 						result.Message = "La clave no puede ser nula";
@@ -134,14 +134,59 @@ namespace RomaBackend.Controllers
 		}
 
 		[HttpPost]
-		public Result CreatePedido(PedidoViewModel pedido)
+		public Result CreatePedido([FromBody]PedidoViewModel pedidoViewModel, [FromUri]bool ignorarExistencias = false)
 		{
-			var result = new Result {IsError = false, Message = "Pedido Creado"};
-			return result;
+			var result = new Result { IsError = false, Message = "Pedido Creado" };
+			try
+			{
+				var pedido = new Pedido
+				{
+					ID = Guid.NewGuid(),
+					ClienteID = pedidoViewModel.ClientID,
+					FechaPedido = DateTime.Now,
+					Status = Status.PorSurtir,
+					Json = pedidoViewModel.Json,
+				};
+				var articulosPedidos = pedidoViewModel.Articulos.Select(a =>
+					new ArticuloPedido
+					{
+						ArticuloID = a.ID,
+						Cantidad = a.Cantidad,
+						PedidoID = pedido.ID,
+						Indicaciones = a.Indicaciones,
+					})
+					.ToList();
+				pedido.ArticulosPedidos = articulosPedidos;
+				using (var context = new BackendContext())
+				{
+					var articulosIDs = articulosPedidos.Select(ap => ap.ArticuloID).ToList();
+                    var articulosToUpdate = context.Articulos.Where(a => articulosIDs.Contains(a.ID)).ToList();
+					foreach (var articulo in articulosToUpdate)
+					{
+						articulo.Existencia -= articulosPedidos.First(a => a.ArticuloID == articulo.ID).Cantidad;
+
+						if (ignorarExistencias || articulo.Existencia >= 0) continue;
+
+						result.IsError = true;
+						result.Message = $"No hay suficientes existencias de \"{articulo.Descripcion}\" para el pedido";
+						return result;
+					}
+
+					context.Pedidos.Add(pedido);
+					context.SaveChanges();
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				result.IsError = true;
+				result.Message = e.Message;
+				return result;
+			}
 		}
 
 		[HttpPost]
-		public Result UpdatePedido(PedidoViewModel pedido)
+		public Result UpdatePedido(PedidoViewModel pedidoViewModel)
 		{
 			var result = new Result { IsError = false, Message = "Pedido Actualizado" };
 			return result;

@@ -146,6 +146,7 @@
     <Compile Include="Models\ArticuloPedido.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Pedido.cs" />
+    <Compile Include="Models\ViewModels.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
