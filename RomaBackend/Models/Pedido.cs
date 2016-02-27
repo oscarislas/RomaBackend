@@ -13,6 +13,7 @@ namespace RomaBackend.Models
 		public DateTime FechaPedido { get; set; }
 		public DateTime? FechaEntrega { get; set; }
 		public Status Status { get; set; }
+		public string Json { get; set; }
 
 		public virtual List<ArticuloPedido>  ArticulosPedidos{ get; set; }
 		public virtual Cliente Cliente { get; set; }

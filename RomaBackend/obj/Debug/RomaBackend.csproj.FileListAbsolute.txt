@@ -104,3 +104,4 @@ E:\Desktop\Desk\rom\RomaBackend\RomaBackend\obj\Debug\RomaBackend.dll
 E:\Desktop\Desk\rom\RomaBackend\RomaBackend\obj\Debug\RomaBackend.pdb
 E:\Desktop\Desk\rom\RomaBackend\RomaBackend\obj\Debug\RomaBackend.Migrations.AddIndexToClave.resources
 E:\Desktop\Desk\rom\RomaBackend\RomaBackend\bin\Microsoft.Web.Infrastructure.xml
+E:\Desktop\Desk\rom\RomaBackend\RomaBackend\obj\Debug\RomaBackend.Migrations.AddCategoriaAndJson.resources

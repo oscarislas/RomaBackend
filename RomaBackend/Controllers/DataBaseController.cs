@@ -21,6 +21,17 @@ namespace RomaBackend.Controllers
 			return cliente;
 		}
 
+		[HttpGet]
+		public Cliente[] GetClientes()
+		{
+			Cliente[] clientes;
+			using (var context = new BackendContext())
+			{
+				clientes = context.Clientes.ToArray();
+			}
+			return clientes;
+		}
+
 		[HttpPost]
 		public Result CreateCliente([FromBody]Cliente cliente)
 		{
@@ -123,30 +134,16 @@ namespace RomaBackend.Controllers
 		}
 
 		[HttpPost]
-		public Result CreatePedido(Pedido pedido)
+		public Result CreatePedido(PedidoViewModel pedido)
 		{
 			var result = new Result {IsError = false, Message = "Pedido Creado"};
 			return result;
 		}
 
 		[HttpPost]
-		public Result UpdatePedido(Pedido pedido)
+		public Result UpdatePedido(PedidoViewModel pedido)
 		{
-			var result = new Result { IsError = false, Message = "Pedido Creado" };
-			return result;
-		}
-
-		[HttpPost]
-		public Result AddArticulos(Articulo[] articulos)
-		{
-			var result = new Result { IsError = false, Message = "Pedido Creado" };
-			return result;
-		}
-
-		[HttpPost]
-		public Result UpdateArticulos(Articulo[] articulos)
-		{
-			var result = new Result { IsError = false, Message = "Pedido Creado" };
+			var result = new Result { IsError = false, Message = "Pedido Actualizado" };
 			return result;
 		}
 

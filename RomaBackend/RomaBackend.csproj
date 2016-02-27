@@ -137,6 +137,10 @@
     <Compile Include="Migrations\201602262247394_AddIndexToClave.Designer.cs">
       <DependentUpon>201602262247394_AddIndexToClave.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201602270210321_AddCategoriaAndJson.cs" />
+    <Compile Include="Migrations\201602270210321_AddCategoriaAndJson.Designer.cs">
+      <DependentUpon>201602270210321_AddCategoriaAndJson.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Articulo.cs" />
     <Compile Include="Models\ArticuloPedido.cs" />
@@ -164,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602262247394_AddIndexToClave.resx">
       <DependentUpon>201602262247394_AddIndexToClave.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602270210321_AddCategoriaAndJson.resx">
+      <DependentUpon>201602270210321_AddCategoriaAndJson.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
